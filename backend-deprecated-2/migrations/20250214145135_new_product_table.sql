@@ -3,9 +3,7 @@
 SELECT 'up SQL query';
 -- +goose StatementEnd
 
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
-CREATE TABLE IF NOT EXISTS product (
+CREATE TABLE IF NOT EXISTS products (
     id UUID PRIMARY KEY,
 
     barcode TEXT NOT NULL,
@@ -14,9 +12,10 @@ CREATE TABLE IF NOT EXISTS product (
     stock INTEGER NOT NULL
 );
 
+
 -- +goose Down
 -- +goose StatementBegin
 SELECT 'down SQL query';
 -- +goose StatementEnd
 
-DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS products;

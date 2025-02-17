@@ -3,7 +3,6 @@ package config
 import (
 	"context"
 	"log"
-    "fmt"
 
 	"github.com/sethvargo/go-envconfig"
 )
@@ -21,7 +20,7 @@ type Config struct {
         Name string `env:"DB_NAME, required"`
         Password string `env:"DB_PASSWORD, required"`
         Debug bool `env:"DB_DEBUG, default=false"`
-        Url string
+
     }
 }
 
@@ -33,6 +32,6 @@ func GetConfig(ctx context.Context) Config {
     if err != nil {
         log.Fatalf("Error loading config variables: %v\n", err)
     }
-    c.Db.Url = fmt.Sprintf("postgresql://%s:%s@%s:%s/%s", c.Db.User, c.Db.Password, c.Db.Host, c.Db.Port, c.Db.Name)
+
     return c
 }
