@@ -5,8 +5,55 @@
 package repositories
 
 import (
+	"database/sql/driver"
+	"fmt"
+
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
+
+type PurchaseStatus string
+
+const (
+	PurchaseStatusCompleted PurchaseStatus = "completed"
+	PurchaseStatusPending   PurchaseStatus = "pending"
+	PurchaseStatusCancelled PurchaseStatus = "cancelled"
+)
+
+func (e *PurchaseStatus) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = PurchaseStatus(s)
+	case string:
+		*e = PurchaseStatus(s)
+	default:
+		return fmt.Errorf("unsupported scan type for PurchaseStatus: %T", src)
+	}
+	return nil
+}
+
+type NullPurchaseStatus struct {
+	PurchaseStatus PurchaseStatus `json:"purchase_status"`
+	Valid          bool           `json:"valid"` // Valid is true if PurchaseStatus is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullPurchaseStatus) Scan(value interface{}) error {
+	if value == nil {
+		ns.PurchaseStatus, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.PurchaseStatus.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullPurchaseStatus) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.PurchaseStatus), nil
+}
 
 type Cart struct {
 	ID         uuid.UUID `json:"id"`
@@ -16,9 +63,10 @@ type Cart struct {
 }
 
 type Customer struct {
-	ID    uuid.UUID `json:"id"`
-	Login string    `json:"login"`
-	Name  string    `json:"name"`
+	ID       uuid.UUID `json:"id"`
+	Login    string    `json:"login"`
+	Name     string    `json:"name"`
+	Password string    `json:"password"`
 }
 
 type Product struct {
@@ -27,4 +75,14 @@ type Product struct {
 	Name    string    `json:"name"`
 	Price   int32     `json:"price"`
 	Stock   int32     `json:"stock"`
+	Rating  int32     `json:"rating"`
+	Descr   string    `json:"descr"`
+	Image   string    `json:"image"`
+}
+
+type Purchase struct {
+	ID           uuid.UUID      `json:"id"`
+	Status       PurchaseStatus `json:"status"`
+	CustomerID   uuid.UUID      `json:"customer_id"`
+	LatestUpdate pgtype.Date    `json:"latest_update"`
 }

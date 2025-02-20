@@ -11,7 +11,12 @@ CREATE TABLE IF NOT EXISTS product (
     barcode TEXT NOT NULL,
     name TEXT NOT NULL,
     price INTEGER NOT NULL,
-    stock INTEGER NOT NULL
+    stock INTEGER NOT NULL,
+    rating INTEGER NOT NULL,
+    descr TEXT NOT NULL,
+
+    -- TODO: this will just point to random images @https://picsum.photos/id/{image}/300/200
+    image TEXT NOT NULL
 );
 
 -- +goose Down

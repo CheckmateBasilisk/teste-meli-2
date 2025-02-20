@@ -1,0 +1,55 @@
+
+.top-bar {
+    width: 100%;
+    background-color: blueviolet;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+
+    .top-bar-logo {
+        width: 25%;
+        img {
+            height: 3rem;
+        }
+
+    }
+    .top-bar-search {
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        
+
+        .top-bar-search-container {
+            position: relative;
+            background-color: white;
+
+            .top-bar-search-icon {
+                position: absolute;
+                top: 50%;
+                right: 0.5rem;
+                transform: translateY(-50%);
+                color: gray;
+            }
+
+            .top-bar-search-input {
+                width: 100%;
+                padding: 0.5rem 2.5rem;
+            }
+        }
+    }
+
+    .top-bar-right {
+        width: 25%;
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        padding-right: 1rem;
+        align-items: center;
+        svg {
+            height: 100%
+        }
+    }
+
+}
+

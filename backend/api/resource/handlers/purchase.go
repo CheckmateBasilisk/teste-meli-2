@@ -1,4 +1,4 @@
-//	this package contains the handlers for the type 'product'
+//	this package contains the handlers for the type 'purchase'
 //	the handlers are called @api/router/router.go
 package handlers
 
@@ -19,22 +19,22 @@ import (
 
 // Create godoc
 //
-//  @summary        Create Product
-//  @description    Create Product
-//  @tags           Product
+//  @summary        Create Purchase
+//  @description    Create Purchase
+//  @tags           Purchase
 //  @accept         json
 //  @produce        json
-//  @param          body    body    repositories.Product    true    "Product form"
+//  @param          body    body    repositories.Purchase    true    "Purchase form"
 //  @success        201
 //  @failure        400 {object}    errors.Error
 //  @failure        422 {object}    errors.Error
 //  @failure        500 {object}    errors.Error
-//  @router         /Product [post]
-func CreateProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+//  @router         /Purchase [post]
+func CreatePurchase(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         //getting data
-        var x repositories.CreateProductParams
+        var x repositories.CreatePurchaseParams
         err := json.NewDecoder(r.Body).Decode(&x)
         if err != nil {
             msg, code := errors.JsonDecodeFailure()
@@ -43,7 +43,7 @@ func CreateProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
             return
         }
         //running
-        p, err := repo.CreateProduct(ctx, x)
+        p, err := repo.CreatePurchase(ctx, x)
         if err != nil {
             msg, code := errors.DbInsertFailure()
             log.Println(fmt.Errorf(msg, err))
@@ -63,18 +63,18 @@ func CreateProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 
 // Read godoc
 //
-//  @summary        Read all Product
-//  @description    Read all Product
-//  @tags           Product
+//  @summary        Read all Purchase
+//  @description    Read all Purchase
+//  @tags           Purchase
 //  @accept         json
 //  @produce        json
-//  @success        200 {array}     repositories.Product
+//  @success        200 {array}     repositories.Purchase
 //  @failure        500 {object}    errors.Error
-//  @router         /Product [get]
-func ReadProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+//  @router         /Purchase [get]
+func ReadPurchase(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
-        ps, err := repo.ReadProduct(ctx)
+        ps, err := repo.ReadPurchase(ctx)
         if err != nil {
             msg, code := errors.DbReadFailure()
             log.Println(fmt.Errorf(msg, err))
@@ -93,18 +93,18 @@ func ReadProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 
 // Read godoc
 //
-//  @summary        Read Product by id
-//  @description    Read Product by id
-//  @tags           Product
+//  @summary        Read Purchase by id
+//  @description    Read Purchase by id
+//  @tags           Purchase
 //  @accept         json
 //  @produce        json
-//  @param          id	path        string  true    "Product ID"
-//  @success        200 {object}    repositories.Product
+//  @param          id	path        string  true    "Purchase ID"
+//  @success        200 {object}    repositories.Purchase
 //  @failure        400 {object}    errors.Error
 //  @failure        404
 //  @failure        500 {object}    errors.Error
-//  @router         /Product/{id} [get]
-func ReadByProductId(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+//  @router         /Purchase/{id} [get]
+func ReadByPurchaseId(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         const paramName = "id"
@@ -116,7 +116,7 @@ func ReadByProductId(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
             http.Error(w, msg, code)
             return
         }
-        p, err := repo.ReadByProductId(ctx, uuid)
+        p, err := repo.ReadByPurchaseId(ctx, uuid)
         if err != nil {
             msg, code := errors.DbReadFailure()
             log.Println(fmt.Errorf(msg, err))
@@ -136,20 +136,20 @@ func ReadByProductId(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 
 // Update godoc
 //
-//  @summary        Update Product
-//  @description    Update Product
-//  @tags           Product
+//  @summary        Update Purchase
+//  @description    Update Purchase
+//  @tags           Purchase
 //  @accept         json
 //  @produce        json
-//  @param          id      path    string  true    "Product ID"
-//  @param          body    body    repositories.Product    true    "Product form"
+//  @param          id      path    string  true    "Purchase ID"
+//  @param          body    body    repositories.Purchase    true    "Purchase form"
 //  @success        200
 //  @failure        400 {object}    errors.Error
 //  @failure        404
 //  @failure        422 {object}    errors.Error
 //  @failure        500 {object}    errors.Error
-//  @router         /Product/{id} [put]
-func UpdateProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+//  @router         /Purchase/{id} [put]
+func UpdatePurchase(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         const paramName = "id"
@@ -162,7 +162,7 @@ func UpdateProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
             return
         }
 
-        var x repositories.UpdateProductParams
+        var x repositories.UpdatePurchaseParams
         err = json.NewDecoder(r.Body).Decode(&x)
         if err != nil {
             msg, code := errors.JsonDecodeFailure()
@@ -172,7 +172,7 @@ func UpdateProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
         }
 
         x.ID = uuid
-        p , err := repo.UpdateProduct(ctx, x)
+        p , err := repo.UpdatePurchase(ctx, x)
         if err != nil {
             msg, code := errors.DbUpdateFailure()
             log.Println(fmt.Errorf(msg, err))
@@ -192,18 +192,18 @@ func UpdateProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 
 // Delete godoc
 //
-//  @summary        Delete Product
-//  @description    Delete Product
-//  @tags           Product
+//  @summary        Delete Purchase
+//  @description    Delete Purchase
+//  @tags           Purchase
 //  @accept         json
 //  @produce        json
-//  @param          id  path    string  true    "Product ID"
+//  @param          id  path    string  true    "Purchase ID"
 //  @success        200
 //  @failure        400 {object}    errors.Error
 //  @failure        404
 //  @failure        500 {object}    errors.Error
-//  @router         /Product/{id} [delete]
-func DeleteProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+//  @router         /Purchase/{id} [delete]
+func DeletePurchase(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         const paramName = "id"
@@ -216,8 +216,8 @@ func DeleteProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
             return
         }
 
-        //call db.DeleteProduct(ctx context.Context, conn, arg)
-        err = repo.DeleteProduct(ctx, uuid)
+        //call db.DeletePurchase(ctx context.Context, conn, arg)
+        err = repo.DeletePurchase(ctx, uuid)
         if err != nil {
             msg, code := errors.DbDeleteFailure()
             log.Println(fmt.Errorf(msg, err))
@@ -227,40 +227,3 @@ func DeleteProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
     }
 }
 
-// Read godoc
-//
-//  @summary        Read Product by name
-//  @description    Read Product by name
-//  @tags           Product
-//  @accept         json
-//  @produce        json
-//  @param          name	query        string  true    "Product Name"
-//  @success        200 {object}    repositories.Product
-//  @failure        400 {object}    errors.Error
-//  @failure        404
-//  @failure        500 {object}    errors.Error
-//  @router         /product/search?={name} [get]
-func ReadByProductName(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
-    repo := repositories.New(conn)
-    return func (w http.ResponseWriter, r *http.Request) {
-        const paramName = "name"
-
-        name := r.URL.Query().Get(paramName)
-
-        p, err := repo.ReadByProductName(ctx, name)
-        if err != nil {
-            msg, code := errors.DbReadFailure()
-            log.Println(fmt.Errorf(msg, err))
-            http.Error(w, msg, code)
-            return
-        }
-
-        err = json.NewEncoder(w).Encode(p)
-        if err != nil {
-            msg, code := errors.JsonEncodeFailure()
-            log.Println(fmt.Errorf(msg, err))
-            http.Error(w, msg, code)
-            return
-        }
-    }
-}

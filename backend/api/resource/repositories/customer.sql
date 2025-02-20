@@ -1,9 +1,9 @@
 -- create
 -- name: CreateCustomer :one
 INSERT INTO customer (
-    id, login, name
+    id, login, name, password
 ) VALUES (
-    uuid_generate_v4(), $1, $2
+    uuid_generate_v4(), $1, $2, $3
 )
     RETURNING *
 ;
@@ -27,7 +27,8 @@ SELECT * FROM customer
 UPDATE customer
 SET
     login = $2,
-	name = $3
+	name = $3,
+    password = $4
 
     WHERE
         id = $1

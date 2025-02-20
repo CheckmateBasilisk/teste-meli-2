@@ -1,9 +1,9 @@
 -- create
 -- name: CreateProduct :one
 INSERT INTO product (
-    id, barcode, name, price, stock
+    id, barcode, name, price, stock, rating, descr, image
 ) VALUES (
-    uuid_generate_v4(), $1, $2, $3, $4
+    uuid_generate_v4(), $1, $2, $3, $4, $5, $6, $7
 )
     RETURNING *
 ;
@@ -29,7 +29,10 @@ SET
     barcode = $2,
 	name = $3,
 	price = $4,
-	stock = $5
+	stock = $5,
+    rating = $6,
+    descr = $7,
+    image = $8
 
     WHERE
         id = $1
@@ -44,4 +47,9 @@ DELETE FROM product
 ;
 
 
-
+-- read many
+-- name: ReadByProductName :many
+SELECT * FROM product
+    WHERE LOWER(name) LIKE CONCAT('%%',$1::TEXT,'%%')
+    ORDER BY name DESC
+;

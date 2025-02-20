@@ -7,7 +7,9 @@ CREATE TABLE IF NOT EXISTS customer (
     id UUID PRIMARY KEY,
 
     login TEXT NOT NULL,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    -- FIXME: obviously unsecure
+    password TEXT NOT NULL
 );
 
 -- +goose Down

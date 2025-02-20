@@ -13,30 +13,36 @@ import (
 
 const CreateCustomer = `-- name: CreateCustomer :one
 INSERT INTO customer (
-    id, login, name
+    id, login, name, password
 ) VALUES (
-    uuid_generate_v4(), $1, $2
+    uuid_generate_v4(), $1, $2, $3
 )
-    RETURNING id, login, name
+    RETURNING id, login, name, password
 `
 
 type CreateCustomerParams struct {
-	Login string `json:"login"`
-	Name  string `json:"name"`
+	Login    string `json:"login"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
 }
 
 // create
 //
 //	INSERT INTO customer (
-//	    id, login, name
+//	    id, login, name, password
 //	) VALUES (
-//	    uuid_generate_v4(), $1, $2
+//	    uuid_generate_v4(), $1, $2, $3
 //	)
-//	    RETURNING id, login, name
+//	    RETURNING id, login, name, password
 func (q *Queries) CreateCustomer(ctx context.Context, arg CreateCustomerParams) (Customer, error) {
-	row := q.db.QueryRow(ctx, CreateCustomer, arg.Login, arg.Name)
+	row := q.db.QueryRow(ctx, CreateCustomer, arg.Login, arg.Name, arg.Password)
 	var i Customer
-	err := row.Scan(&i.ID, &i.Login, &i.Name)
+	err := row.Scan(
+		&i.ID,
+		&i.Login,
+		&i.Name,
+		&i.Password,
+	)
 	return i, err
 }
 
@@ -57,7 +63,7 @@ func (q *Queries) DeleteCustomer(ctx context.Context, id uuid.UUID) error {
 }
 
 const ReadByCustomerId = `-- name: ReadByCustomerId :one
-SELECT id, login, name FROM customer
+SELECT id, login, name, password FROM customer
     WHERE
         id = $1
     LIMIT 1
@@ -65,25 +71,30 @@ SELECT id, login, name FROM customer
 
 // read one
 //
-//	SELECT id, login, name FROM customer
+//	SELECT id, login, name, password FROM customer
 //	    WHERE
 //	        id = $1
 //	    LIMIT 1
 func (q *Queries) ReadByCustomerId(ctx context.Context, id uuid.UUID) (Customer, error) {
 	row := q.db.QueryRow(ctx, ReadByCustomerId, id)
 	var i Customer
-	err := row.Scan(&i.ID, &i.Login, &i.Name)
+	err := row.Scan(
+		&i.ID,
+		&i.Login,
+		&i.Name,
+		&i.Password,
+	)
 	return i, err
 }
 
 const ReadCustomer = `-- name: ReadCustomer :many
-SELECT id, login, name FROM customer
+SELECT id, login, name, password FROM customer
     ORDER BY name
 `
 
 // read many
 //
-//	SELECT id, login, name FROM customer
+//	SELECT id, login, name, password FROM customer
 //	    ORDER BY name
 func (q *Queries) ReadCustomer(ctx context.Context) ([]Customer, error) {
 	rows, err := q.db.Query(ctx, ReadCustomer)
@@ -94,7 +105,12 @@ func (q *Queries) ReadCustomer(ctx context.Context) ([]Customer, error) {
 	items := []Customer{}
 	for rows.Next() {
 		var i Customer
-		if err := rows.Scan(&i.ID, &i.Login, &i.Name); err != nil {
+		if err := rows.Scan(
+			&i.ID,
+			&i.Login,
+			&i.Name,
+			&i.Password,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -109,17 +125,19 @@ const UpdateCustomer = `-- name: UpdateCustomer :one
 UPDATE customer
 SET
     login = $2,
-	name = $3
+	name = $3,
+    password = $4
 
     WHERE
         id = $1
-    RETURNING id, login, name
+    RETURNING id, login, name, password
 `
 
 type UpdateCustomerParams struct {
-	ID    uuid.UUID `json:"id"`
-	Login string    `json:"login"`
-	Name  string    `json:"name"`
+	ID       uuid.UUID `json:"id"`
+	Login    string    `json:"login"`
+	Name     string    `json:"name"`
+	Password string    `json:"password"`
 }
 
 // update
@@ -127,14 +145,25 @@ type UpdateCustomerParams struct {
 //	UPDATE customer
 //	SET
 //	    login = $2,
-//		name = $3
+//		name = $3,
+//	    password = $4
 //
 //	    WHERE
 //	        id = $1
-//	    RETURNING id, login, name
+//	    RETURNING id, login, name, password
 func (q *Queries) UpdateCustomer(ctx context.Context, arg UpdateCustomerParams) (Customer, error) {
-	row := q.db.QueryRow(ctx, UpdateCustomer, arg.ID, arg.Login, arg.Name)
+	row := q.db.QueryRow(ctx, UpdateCustomer,
+		arg.ID,
+		arg.Login,
+		arg.Name,
+		arg.Password,
+	)
 	var i Customer
-	err := row.Scan(&i.ID, &i.Login, &i.Name)
+	err := row.Scan(
+		&i.ID,
+		&i.Login,
+		&i.Name,
+		&i.Password,
+	)
 	return i, err
 }

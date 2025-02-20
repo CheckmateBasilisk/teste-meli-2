@@ -13,11 +13,11 @@ import (
 
 const CreateProduct = `-- name: CreateProduct :one
 INSERT INTO product (
-    id, barcode, name, price, stock
+    id, barcode, name, price, stock, rating, descr, image
 ) VALUES (
-    uuid_generate_v4(), $1, $2, $3, $4
+    uuid_generate_v4(), $1, $2, $3, $4, $5, $6, $7
 )
-    RETURNING id, barcode, name, price, stock
+    RETURNING id, barcode, name, price, stock, rating, descr, image
 `
 
 type CreateProductParams struct {
@@ -25,22 +25,28 @@ type CreateProductParams struct {
 	Name    string `json:"name"`
 	Price   int32  `json:"price"`
 	Stock   int32  `json:"stock"`
+	Rating  int32  `json:"rating"`
+	Descr   string `json:"descr"`
+	Image   string `json:"image"`
 }
 
 // create
 //
 //	INSERT INTO product (
-//	    id, barcode, name, price, stock
+//	    id, barcode, name, price, stock, rating, descr, image
 //	) VALUES (
-//	    uuid_generate_v4(), $1, $2, $3, $4
+//	    uuid_generate_v4(), $1, $2, $3, $4, $5, $6, $7
 //	)
-//	    RETURNING id, barcode, name, price, stock
+//	    RETURNING id, barcode, name, price, stock, rating, descr, image
 func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (Product, error) {
 	row := q.db.QueryRow(ctx, CreateProduct,
 		arg.Barcode,
 		arg.Name,
 		arg.Price,
 		arg.Stock,
+		arg.Rating,
+		arg.Descr,
+		arg.Image,
 	)
 	var i Product
 	err := row.Scan(
@@ -49,6 +55,9 @@ func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (P
 		&i.Name,
 		&i.Price,
 		&i.Stock,
+		&i.Rating,
+		&i.Descr,
+		&i.Image,
 	)
 	return i, err
 }
@@ -70,7 +79,7 @@ func (q *Queries) DeleteProduct(ctx context.Context, id uuid.UUID) error {
 }
 
 const ReadByProductId = `-- name: ReadByProductId :one
-SELECT id, barcode, name, price, stock FROM product
+SELECT id, barcode, name, price, stock, rating, descr, image FROM product
     WHERE
         id = $1
     LIMIT 1
@@ -78,7 +87,7 @@ SELECT id, barcode, name, price, stock FROM product
 
 // read one
 //
-//	SELECT id, barcode, name, price, stock FROM product
+//	SELECT id, barcode, name, price, stock, rating, descr, image FROM product
 //	    WHERE
 //	        id = $1
 //	    LIMIT 1
@@ -91,18 +100,61 @@ func (q *Queries) ReadByProductId(ctx context.Context, id uuid.UUID) (Product, e
 		&i.Name,
 		&i.Price,
 		&i.Stock,
+		&i.Rating,
+		&i.Descr,
+		&i.Image,
 	)
 	return i, err
 }
 
+const ReadByProductName = `-- name: ReadByProductName :many
+SELECT id, barcode, name, price, stock, rating, descr, image FROM product
+    WHERE LOWER(name) LIKE CONCAT('%%',$1::TEXT,'%%')
+    ORDER BY name DESC
+`
+
+// read many
+//
+//	SELECT id, barcode, name, price, stock, rating, descr, image FROM product
+//	    WHERE LOWER(name) LIKE CONCAT('%%',$1::TEXT,'%%')
+//	    ORDER BY name DESC
+func (q *Queries) ReadByProductName(ctx context.Context, dollar_1 string) ([]Product, error) {
+	rows, err := q.db.Query(ctx, ReadByProductName, dollar_1)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Product{}
+	for rows.Next() {
+		var i Product
+		if err := rows.Scan(
+			&i.ID,
+			&i.Barcode,
+			&i.Name,
+			&i.Price,
+			&i.Stock,
+			&i.Rating,
+			&i.Descr,
+			&i.Image,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const ReadProduct = `-- name: ReadProduct :many
-SELECT id, barcode, name, price, stock FROM product
+SELECT id, barcode, name, price, stock, rating, descr, image FROM product
     ORDER BY name
 `
 
 // read many
 //
-//	SELECT id, barcode, name, price, stock FROM product
+//	SELECT id, barcode, name, price, stock, rating, descr, image FROM product
 //	    ORDER BY name
 func (q *Queries) ReadProduct(ctx context.Context) ([]Product, error) {
 	rows, err := q.db.Query(ctx, ReadProduct)
@@ -119,6 +171,9 @@ func (q *Queries) ReadProduct(ctx context.Context) ([]Product, error) {
 			&i.Name,
 			&i.Price,
 			&i.Stock,
+			&i.Rating,
+			&i.Descr,
+			&i.Image,
 		); err != nil {
 			return nil, err
 		}
@@ -136,11 +191,14 @@ SET
     barcode = $2,
 	name = $3,
 	price = $4,
-	stock = $5
+	stock = $5,
+    rating = $6,
+    descr = $7,
+    image = $8
 
     WHERE
         id = $1
-    RETURNING id, barcode, name, price, stock
+    RETURNING id, barcode, name, price, stock, rating, descr, image
 `
 
 type UpdateProductParams struct {
@@ -149,6 +207,9 @@ type UpdateProductParams struct {
 	Name    string    `json:"name"`
 	Price   int32     `json:"price"`
 	Stock   int32     `json:"stock"`
+	Rating  int32     `json:"rating"`
+	Descr   string    `json:"descr"`
+	Image   string    `json:"image"`
 }
 
 // update
@@ -158,11 +219,14 @@ type UpdateProductParams struct {
 //	    barcode = $2,
 //		name = $3,
 //		price = $4,
-//		stock = $5
+//		stock = $5,
+//	    rating = $6,
+//	    descr = $7,
+//	    image = $8
 //
 //	    WHERE
 //	        id = $1
-//	    RETURNING id, barcode, name, price, stock
+//	    RETURNING id, barcode, name, price, stock, rating, descr, image
 func (q *Queries) UpdateProduct(ctx context.Context, arg UpdateProductParams) (Product, error) {
 	row := q.db.QueryRow(ctx, UpdateProduct,
 		arg.ID,
@@ -170,6 +234,9 @@ func (q *Queries) UpdateProduct(ctx context.Context, arg UpdateProductParams) (P
 		arg.Name,
 		arg.Price,
 		arg.Stock,
+		arg.Rating,
+		arg.Descr,
+		arg.Image,
 	)
 	var i Product
 	err := row.Scan(
@@ -178,6 +245,9 @@ func (q *Queries) UpdateProduct(ctx context.Context, arg UpdateProductParams) (P
 		&i.Name,
 		&i.Price,
 		&i.Stock,
+		&i.Rating,
+		&i.Descr,
+		&i.Image,
 	)
 	return i, err
 }
