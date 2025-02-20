@@ -20,7 +20,9 @@ export default function TopBar() {
       <div className='top-bar-search'>
         <div className='top-bar-search-container'>
           <InputBase className='top-bar-search-input' placeholder='Search Products'/>
-          <IconButton className='top-bar-search-icon' onClick={()=>{navigate("/product/search?name="+searchContent)}}>
+
+          {/* FIXME: this doesnt change the url... */}
+          <IconButton className='top-bar-search-icon' onClick={()=>{navigate("/search?name="+searchContent)}}>
               <SearchIcon />
           </IconButton>
 

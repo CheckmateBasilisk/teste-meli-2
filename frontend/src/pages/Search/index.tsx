@@ -47,8 +47,8 @@ const Search = () => {
         <Layout>
             <Grid2 container spacing={2}>
                 <Grid2 container size={12}>
-                    {products.map((product) => (
-                        <Grid2 size={4}>
+                    {products.map((product,key) => (
+                        <Grid2 size={4} key={key}>
                             <ProductCard product={product}/>
                         </Grid2>
                     ))}

@@ -44,12 +44,15 @@ export default function ProductCard(p : params) {
           </Typography>
         </CardContent>
       </CardActionArea>
+
       <Divider variant="middle" flexItem />
+      
       <CardContent >
         <Typography variant="body1" gutterBottom>
           {FormatBRL(p.product.price)}
         </Typography>
       </CardContent>
+      
       <CardActions>
         <Button size="small">Add to Cart</Button>
       </CardActions>

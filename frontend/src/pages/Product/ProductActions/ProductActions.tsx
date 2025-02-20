@@ -26,10 +26,13 @@ interface params {
 export default function ProductActions(p : params) {
   const id = React.useId();
 
-  let quantity = 10
-  
+  const [quantity, setQuantity] = useState(1);
+    
   const { cartEntries, setCartEntries } = useContext(CartContext);
-  const { quantity: contextQuantity, setQuantity: contextSetQuantity} = useContext(CartContext);
+  let currentEntry = cartEntries.filter(e => e.product.id == p.product.id); 
+  console.log("params at producActions:", p.product.id)
+  console.log("current Entry: ", currentEntry)
+  //const [cartEntries, setCartEntries] = useState( CartContextInitialState.cartEntries );
 
   return (
     <div style={{ padding: '1rem', border: '1px solid #ccc', borderRadius: '0.5rem' }}>
@@ -52,7 +55,7 @@ export default function ProductActions(p : params) {
 
       {/* botao adicionar ao carrinho */}
       {/* TODO: IMPLEMENTAR ADICIONAR AO CARRINHO, preciso mexer na API pra isso... */}
-      <Button variant="contained" href="#contained-buttons" onClick={() => contextSetQuantity(quantity)}>
+      <Button variant="contained" href="#contained-buttons" onClick={() => setCartEntries(quantity)}>
         Add to Cart
       </Button>
     </div>

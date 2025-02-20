@@ -82,24 +82,6 @@ export default function ShoppingCart() {
       title: "Filme Fotográfico 50D Kodak Color",
       desc : "lalilulelo lalilulelo lalilulelo lalilulelo lalilulelo lalilulelo lalilulelo ",
     },
-    { image: itemImg,
-      price: 999,
-      alt: "item.alt",
-      title: "Filme Fotográfico 50D Kodak Color",
-      desc : "lalilulelo lalilulelo lalilulelo lalilulelo lalilulelo lalilulelo lalilulelo ",
-    },
-    { image: itemImg,
-      price: 999,
-      alt: "item.alt",
-      title: "Filme Fotográfico 50D Kodak Color",
-      desc : "lalilulelo lalilulelo lalilulelo lalilulelo lalilulelo lalilulelo lalilulelo ",
-    },
-    { image: itemImg,
-      price: 999,
-      alt: "item.alt",
-      title: "Filme Fotográfico 50D Kodak Color",
-      desc : "lalilulelo lalilulelo lalilulelo lalilulelo lalilulelo lalilulelo lalilulelo ",
-    }
   ]
 
   return (

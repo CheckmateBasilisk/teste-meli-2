@@ -247,6 +247,7 @@ func ReadByProductName(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 
         name := r.URL.Query().Get(paramName)
 
+
         p, err := repo.ReadByProductName(ctx, name)
         if err != nil {
             msg, code := errors.DbReadFailure()
@@ -254,6 +255,9 @@ func ReadByProductName(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
             http.Error(w, msg, code)
             return
         }
+
+        fmt.Println(">>>> ", name)
+        fmt.Println(">>>> ", p)
 
         err = json.NewEncoder(w).Encode(p)
         if err != nil {

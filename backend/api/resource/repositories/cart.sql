@@ -41,4 +41,7 @@ DELETE FROM cart
 ;
 
 
+-- read many
+-- name: ReadCartByCustomerId
+SELECT * FROM cart
 
