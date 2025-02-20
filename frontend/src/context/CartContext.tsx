@@ -1,5 +1,5 @@
-import { createContext, Dispatch, SetStateAction, useEffect } from "react";
-import React, { useState } from 'react';
+import { createContext, Dispatch, SetStateAction } from "react";
+import { useState } from 'react';
 
 // saves data from customer's shopping cart
 

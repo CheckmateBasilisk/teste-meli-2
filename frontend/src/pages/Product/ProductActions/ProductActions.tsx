@@ -27,12 +27,17 @@ export default function ProductActions(p : params) {
   const id = React.useId();
 
   const [quantity, setQuantity] = useState(1);
-    
   const { cartEntries, setCartEntries } = useContext(CartContext);
-  let currentEntry = cartEntries.filter(e => e.product.id == p.product.id); 
-  console.log("params at producActions:", p.product.id)
-  console.log("current Entry: ", currentEntry)
+
+  let newEntry = { //FIXME: remove this?
+    id: "lalilulelo",
+    amount: quantity,
+    product: p.product
+  }
+  //let currentEntry = cartEntries.filter(e => e.product.id == p.product.id); 
+
   //const [cartEntries, setCartEntries] = useState( CartContextInitialState.cartEntries );
+  console.log("cartEntries: ",cartEntries)
 
   return (
     <div style={{ padding: '1rem', border: '1px solid #ccc', borderRadius: '0.5rem' }}>
@@ -55,7 +60,10 @@ export default function ProductActions(p : params) {
 
       {/* botao adicionar ao carrinho */}
       {/* TODO: IMPLEMENTAR ADICIONAR AO CARRINHO, preciso mexer na API pra isso... */}
-      <Button variant="contained" href="#contained-buttons" onClick={() => setCartEntries(quantity)}>
+      <Button variant="contained" href="#contained-buttons" onClick={() => {
+        //given cartEntries, find current entry. Add quantity to it
+        setCartEntries([...cartEntries, ...[newEntry]]) //FIXME: cartEntries is initialized with an awful starting value. Upon adding new Entries, that value stays on the array...
+      }}>
         Add to Cart
       </Button>
     </div>
