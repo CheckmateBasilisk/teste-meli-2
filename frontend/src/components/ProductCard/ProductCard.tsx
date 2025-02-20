@@ -7,6 +7,7 @@ import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
 import Divider from '@mui/material/Divider';
 import { FormatBRL } from '../../utils';
+import { useNavigate } from 'react-router';
 
 
 
@@ -26,9 +27,11 @@ interface params {
 }
 
 export default function ProductCard(p : params) {
+  const navigate = useNavigate()
+
   return (
     <Card sx={{ maxWidth: 345 }}>
-      <CardActionArea>
+      <CardActionArea onClick={()=>{navigate("/product/"+p.product.id)}}>
         <CardMedia
           component="img"
           height="140"
@@ -52,7 +55,7 @@ export default function ProductCard(p : params) {
           {FormatBRL(p.product.price)}
         </Typography>
       </CardContent>
-      
+
       <CardActions>
         <Button size="small">Add to Cart</Button>
       </CardActions>

@@ -36,7 +36,7 @@ export default function ProductActions(p : params) {
 
   return (
     <div style={{ padding: '1rem', border: '1px solid #ccc', borderRadius: '0.5rem' }}>
-      {/* i should move this to a component eventually... */}
+      {/* TODO: i should move this to a component eventually... */}
       <NumberField.Root id={id} defaultValue={1} min={1} value={quantity} onValueChange={(value) => {setQuantity(value as number)}} className={styles.Field}>
       <NumberField.Group className={styles.Group}>
         <NumberField.Decrement className={styles.Decrement}>
