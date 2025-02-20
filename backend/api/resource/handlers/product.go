@@ -239,7 +239,7 @@ func DeleteProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 //  @failure        400 {object}    errors.Error
 //  @failure        404
 //  @failure        500 {object}    errors.Error
-//  @router         /product/search?={name} [get]
+//  @router         /product/search     [get]
 func ReadByProductName(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {

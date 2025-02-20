@@ -21,20 +21,40 @@ definitions:
         type: string
       name:
         type: string
+      password:
+        type: string
     type: object
   repositories.Product:
     properties:
       barcode:
         type: string
+      descr:
+        type: string
       id:
+        type: string
+      image:
         type: string
       name:
         type: string
       price:
         type: integer
+      rating:
+        type: integer
       stock:
         type: integer
     type: object
+  repositories.Purchase:
+    type: object
+  repositories.PurchaseStatus:
+    enum:
+    - completed
+    - pending
+    - cancelled
+    type: string
+    x-enum-varnames:
+    - PurchaseStatusCompleted
+    - PurchaseStatusPending
+    - PurchaseStatusCancelled
 host: localhost:8080
 info:
   contact:
@@ -489,6 +509,186 @@ paths:
           schema:
             $ref: '#/definitions/errors.Error'
       summary: Update Product
+      tags:
+      - Product
+  /Purchase:
+    get:
+      consumes:
+      - application/json
+      description: Read all Purchase
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/repositories.Purchase'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Read all Purchase
+      tags:
+      - Purchase
+    post:
+      consumes:
+      - application/json
+      description: Create Purchase
+      parameters:
+      - description: Purchase form
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/repositories.Purchase'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Create Purchase
+      tags:
+      - Purchase
+  /Purchase/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Purchase
+      parameters:
+      - description: Purchase ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Delete Purchase
+      tags:
+      - Purchase
+    get:
+      consumes:
+      - application/json
+      description: Read Purchase by id
+      parameters:
+      - description: Purchase ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/repositories.Purchase'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Read Purchase by id
+      tags:
+      - Purchase
+    put:
+      consumes:
+      - application/json
+      description: Update Purchase
+      parameters:
+      - description: Purchase ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Purchase form
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/repositories.Purchase'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Update Purchase
+      tags:
+      - Purchase
+  /product/search:
+    get:
+      consumes:
+      - application/json
+      description: Read Product by name
+      parameters:
+      - description: Product Name
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/repositories.Product'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Error'
+      summary: Read Product by name
       tags:
       - Product
 swagger: "2.0"
