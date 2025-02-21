@@ -42,5 +42,3 @@ DELETE FROM customer
         id = $1
 ;
 
-
-

@@ -3,7 +3,7 @@ import Home from './pages/Home'
 import Search from './pages/Search'
 import Product from './pages/Product'
 import MyAccount from './pages/MyAccount'
-import Payment from './pages/Payment'
+// import Payment from './pages/Payment'
 import Login from './pages/Login'
 
 const CustomRoutes = () => {
@@ -15,7 +15,7 @@ const CustomRoutes = () => {
                 <Route path='/product/:id' element={<Product/>} />
                 <Route path='/my-account' element={<MyAccount/>} />
                 <Route path='/login' element={<Login/>} />
-                <Route path='/payment' element={<Payment/>} />
+                {/* <Route path='/payment' element={<Payment/>} /> */}
 
             </Routes>
         </BrowserRouter>

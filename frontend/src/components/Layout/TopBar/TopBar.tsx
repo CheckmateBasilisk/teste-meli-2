@@ -19,7 +19,7 @@ export default function TopBar() {
       </div>
       <div className='top-bar-search'>
         <div className='top-bar-search-container'>
-          <InputBase className='top-bar-search-input' placeholder='Search Products'/>
+          <InputBase className='top-bar-search-input' placeholder='Search Products'onChange={(e) => {setSearchContent(e.target.value)}} />
 
           {/* FIXME: this doesnt change the url... */}
           <IconButton className='top-bar-search-icon' onClick={()=>{navigate("/search?name="+searchContent)}}>

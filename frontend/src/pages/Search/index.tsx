@@ -11,7 +11,6 @@ import { useSearchParams } from 'react-router';
 import { BaseUrl } from '../../utils/vars';
 
 const Search = () => {
-    const[search, setSearch] = useState("")
     const [products, setProducts] = useState([{
         id: "",
         barcode: "",
@@ -40,7 +39,7 @@ const Search = () => {
                     return
                 })
         }
-        , [search]
+        , [productName]
     )
 
     return (

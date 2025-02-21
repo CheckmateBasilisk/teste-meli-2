@@ -26,10 +26,10 @@ const AuthContextInitialState = {
     JWTToken: "",
     setJWTToken: () => {},
     customer: {
-        id: "",
-        login: "",
-        name: "",
-        email: "",
+        id: "0330f5c4-e5fb-4282-ac78-2339e71a9781",
+        login: "Warmaster99",
+        name: "Sum Tzu",
+        email: "sun@tzu.com",
     },
     setCustomer: () => {},
 }

@@ -3,7 +3,7 @@ import { NumberField } from '@base-ui-components/react/number-field';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import styles from './style.module.scss';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import { CartContext } from '../../../context/CartContext';
 
@@ -29,14 +29,10 @@ export default function ProductActions(p : params) {
   const [quantity, setQuantity] = useState(1);
   const { cartEntries, setCartEntries } = useContext(CartContext);
 
-  let newEntry = { //FIXME: remove this?
-    id: "lalilulelo",
-    amount: quantity,
-    product: p.product
-  }
-  //let currentEntry = cartEntries.filter(e => e.product.id == p.product.id); 
-
   //const [cartEntries, setCartEntries] = useState( CartContextInitialState.cartEntries );
+  // console.log("currentEntry: ",currentEntry)
+  
+  
   console.log("cartEntries: ",cartEntries)
 
   return (
@@ -61,8 +57,20 @@ export default function ProductActions(p : params) {
       {/* botao adicionar ao carrinho */}
       {/* TODO: IMPLEMENTAR ADICIONAR AO CARRINHO, preciso mexer na API pra isso... */}
       <Button variant="contained" href="#contained-buttons" onClick={() => {
+        let currentEntry = cartEntries.find(e => e.product.id == p.product.id);
+
+        if (!currentEntry) {
+          const newEntry = { // FIXME: Sub for post api call 
+            id: "lalilulelo",
+            amount: quantity,
+            product: p.product
+          }
+          return setCartEntries([...cartEntries, newEntry]) //FIXME: cartEntries is initialized with an awful starting value. Upon adding new Entries, that value stays on the array...
+        }
+
+        currentEntry.amount = quantity 
+        setCartEntries(cartEntries);
         //given cartEntries, find current entry. Add quantity to it
-        setCartEntries([...cartEntries, ...[newEntry]]) //FIXME: cartEntries is initialized with an awful starting value. Upon adding new Entries, that value stays on the array...
       }}>
         Add to Cart
       </Button>

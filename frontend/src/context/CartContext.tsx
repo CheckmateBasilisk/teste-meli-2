@@ -43,7 +43,7 @@ const CartContextInitialState = {
 export const CartContext = createContext <CartContextProps> (CartContextInitialState)
 
 export const CartContextProvider = ({children}:any) => {
-    const [cartEntries, setCartEntries] = useState( CartContextInitialState.cartEntries );
+    const [cartEntries, setCartEntries] = useState<cartEntry[]>( [] );
 
     return (
         <CartContext.Provider value={{cartEntries, setCartEntries}} >

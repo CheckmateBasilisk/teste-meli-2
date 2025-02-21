@@ -40,7 +40,6 @@ DELETE FROM cart
         id = $1
 ;
 
-
 -- read many
 -- name: ReadCartByCustomerId
 SELECT * FROM cart
