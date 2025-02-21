@@ -65,7 +65,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function ShoppingCart() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const { quantity } = useContext(CartContext);
+  const { cartEntries } = useContext(CartContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -122,24 +122,33 @@ export default function ShoppingCart() {
             Shopping Cart
           </Typography>
         </DrawerHeader>
-        {`Context counting: ${quantity}`}
         <Divider />
           {/* list of products currently in cart */}
         <List>
           {/* there should be a list of products currently in the shopping cart here! */}
-          {data.map((data) => (
-            <ListItem disablePadding key={data.title}>
-              <ProductSummary image={data.image} price={data.price} alt={data.alt} title={data.title} desc={data.desc}/>
+          {cartEntries?.map((data) => (
+            <ListItem disablePadding key={data.product.name}>
+              <ProductSummary cartEntry={data} image={itemImg} alt={`${data.product.name} image`}/>
             </ListItem>
           ))}
         </List>
         <Divider />
         {/* RESUMO DA COMPRA E BOTAO DE AVANÇAR */}
-        <Typography variant="h6">
-          Total: { FormatBRL(data.reduce((tot,d) => {return tot+(d.price)}, 0)) }
-
-        </Typography>
-        <Button variant="contained" >Buy Now</Button>
+        {cartEntries?.length > 0 ? (
+          <>
+              <Typography variant="h6">
+                {`${cartEntries?.length} items`}
+              </Typography>
+              <Typography variant="h6">
+                Total: { FormatBRL(cartEntries.reduce((tot,d) => {return tot+(d.amount*d.product.price)}, 0)) }
+              </Typography>
+              <Button variant="contained" >Buy Now</Button>
+          </>
+        ): (
+          <Typography variant="h6">
+              Empty Cart
+          </Typography>
+        )}
 
       </Drawer>
     </Box>

@@ -25,7 +25,7 @@ const AuthContextInitialState = {
     // fields from customer + "setters" ? 
     JWTToken: "",
     setJWTToken: () => {},
-    customer: {
+    customer: { //FIXME: this user is hard coded
         id: "0330f5c4-e5fb-4282-ac78-2339e71a9781",
         login: "Warmaster99",
         name: "Sum Tzu",
@@ -40,7 +40,12 @@ export const AuthContext = createContext <AuthContextProps> (AuthContextInitialS
 export const AuthContextProvider = ({children}:any) => {
     //setting up context's actual innitial values
     const [JWTToken, setJWTToken] = useState("lalilulelo");
-    const [customer, setCustomer] = useState({id: "",login: "",name: "",email: ""},);
+    const [customer, setCustomer] = useState({
+        id: "0330f5c4-e5fb-4282-ac78-2339e71a9781",
+        login: "Warmaster99",
+        name: "Sum Tzu",
+        email: "sun@tzu.com",
+    });
     
     return (
         <AuthContext.Provider value={{JWTToken, setJWTToken, customer, setCustomer}} >

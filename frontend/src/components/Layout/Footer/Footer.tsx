@@ -17,7 +17,7 @@ export default function TopBar() {
         <Link
           underline="hover"
           color="inherit"
-          href="/material-ui/getting-started/installation/"
+          href="/"
         >
           Core
         </Link>

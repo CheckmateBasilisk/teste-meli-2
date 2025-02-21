@@ -27,12 +27,7 @@ export default function ProductActions(p : params) {
   const id = React.useId();
 
   const [quantity, setQuantity] = useState(1);
-  const { cartEntries, setCartEntries } = useContext(CartContext);
-
-  //const [cartEntries, setCartEntries] = useState( CartContextInitialState.cartEntries );
-  // console.log("currentEntry: ",currentEntry)
-  
-  
+  const { cartEntries, setCartEntries, createCart, updateCart, isCartCreated } = useContext(CartContext);
   console.log("cartEntries: ",cartEntries)
 
   return (
@@ -56,21 +51,22 @@ export default function ProductActions(p : params) {
 
       {/* botao adicionar ao carrinho */}
       {/* TODO: IMPLEMENTAR ADICIONAR AO CARRINHO, preciso mexer na API pra isso... */}
-      <Button variant="contained" href="#contained-buttons" onClick={() => {
+      <Button variant="contained" href="#contained-buttons" onClick={async () => {
         let currentEntry = cartEntries.find(e => e.product.id == p.product.id);
-
-        if (!currentEntry) {
+        let transientCartId ="";
+        if (!isCartCreated || !currentEntry) {
+          const cartEntryId = await createCart(p.product.id, quantity)
           const newEntry = { // FIXME: Sub for post api call 
-            id: "lalilulelo",
+            id: cartEntryId,
             amount: quantity,
             product: p.product
           }
-          return setCartEntries([...cartEntries, newEntry]) //FIXME: cartEntries is initialized with an awful starting value. Upon adding new Entries, that value stays on the array...
+          setCartEntries([...cartEntries, newEntry]) //FIXME: cartEntries is initialized with an awful starting value. Upon adding new Entries, that value stays on the array...
+        } else {
+          await updateCart(p.product.id, quantity, currentEntry.id)
+          currentEntry.amount = quantity 
+          setCartEntries(cartEntries);
         }
-
-        currentEntry.amount = quantity 
-        setCartEntries(cartEntries);
-        //given cartEntries, find current entry. Add quantity to it
       }}>
         Add to Cart
       </Button>

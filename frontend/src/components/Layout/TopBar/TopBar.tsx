@@ -15,7 +15,10 @@ export default function TopBar() {
 
     <div className='top-bar'>
       <div className='top-bar-logo'>
-        <img src={Logo} alt="logo"/>
+        <IconButton aria-label='My Account' onClick={()=>{navigate("/")}}>
+          <img src={Logo} alt="logo"/>
+        </IconButton>
+
       </div>
       <div className='top-bar-search'>
         <div className='top-bar-search-container'>
@@ -33,6 +36,7 @@ export default function TopBar() {
         <IconButton aria-label='My Account' onClick={()=>{navigate("/my-account")}}>
           <ClientAvatar/>
         </IconButton>
+        
         <ShoppingCart/>
       </div>
     </div>
