@@ -11,7 +11,7 @@ import (
 
     "github.com/google/uuid"
 	"github.com/go-chi/chi/v5"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 
 	"api-meli/api/resource/repositories"
 	"api-meli/api/common/errors"
@@ -30,7 +30,7 @@ import (
 //  @failure        422 {object}    errors.Error
 //  @failure        500 {object}    errors.Error
 //  @router         /Customer [post]
-func CreateCustomer(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func CreateCustomer(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         //getting data
@@ -71,7 +71,7 @@ func CreateCustomer(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 //  @success        200 {array}     repositories.Customer
 //  @failure        500 {object}    errors.Error
 //  @router         /Customer [get]
-func ReadCustomer(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func ReadCustomer(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         ps, err := repo.ReadCustomer(ctx)
@@ -104,7 +104,7 @@ func ReadCustomer(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 //  @failure        404
 //  @failure        500 {object}    errors.Error
 //  @router         /Customer/{id} [get]
-func ReadByCustomerId(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func ReadByCustomerId(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         const paramName = "id"
@@ -149,7 +149,7 @@ func ReadByCustomerId(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 //  @failure        422 {object}    errors.Error
 //  @failure        500 {object}    errors.Error
 //  @router         /Customer/{id} [put]
-func UpdateCustomer(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func UpdateCustomer(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         const paramName = "id"
@@ -203,7 +203,7 @@ func UpdateCustomer(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 //  @failure        404
 //  @failure        500 {object}    errors.Error
 //  @router         /Customer/{id} [delete]
-func DeleteCustomer(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func DeleteCustomer(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         const paramName = "id"

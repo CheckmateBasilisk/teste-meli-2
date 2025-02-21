@@ -7,6 +7,7 @@ import (
 	"net/http"
 
     "github.com/jackc/pgx/v5"
+    "github.com/jackc/pgx/v5/pgxpool"
 
     "api-meli/config"
     "api-meli/api/router"
@@ -27,13 +28,15 @@ func main() {
     conf := config.GetConfig(ctx)
 
     dbConn , dbErr := pgx.Connect(ctx, conf.Db.Url)
+    dbPool, dbErr := pgxpool.New(ctx, conf.Db.Url)
     if dbErr != nil {
         log.Fatalf("Database connection failed: %v\n", dbErr)
     }
     defer dbConn.Close(ctx) //FIXME: catch error?
+	defer dbPool.Close()
 
     // building server
-    router := router.NewRouter(ctx, dbConn)
+    router := router.NewRouter(ctx, dbPool)
     server := &http.Server{
         Addr: fmt.Sprintf(":%s", conf.Server.Port),
         Handler: router,
@@ -44,6 +47,4 @@ func main() {
     err := server.ListenAndServe()
     if err != nil {
         log.Fatalf("Server startup failed: %v", err)
-    }
-}
-
+    } }

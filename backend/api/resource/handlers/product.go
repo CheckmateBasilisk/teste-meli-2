@@ -11,11 +11,29 @@ import (
 
     "github.com/google/uuid"
 	"github.com/go-chi/chi/v5"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 
 	"api-meli/api/resource/repositories"
 	"api-meli/api/common/errors"
 )
+
+//FIXME: change conn to a connection pool. Then create a connection from it and use it during the operation.
+// SE PÁ É SÓ PASSAR A POOL AO INVÉS DA CONEXÃO E GG!!!!
+//https://www.reddit.com/r/golang/comments/1c8br5c/does_anyone_have_a_clear_example_of_how_to_use/?rdt=39668
+/*something like this ... any way to put it into a func ?
+
+import "github.com/jackc/pgx/v5/pgxpool"
+
+err, con := pool.Acquire(ctx)
+if err != nil {
+    msg, code := errors.ConnectionAcquisitionFailure()
+    log.Println(fmt.Errorf(msg, err))
+    http.Error(w, msg, code)
+    return
+}
+defer conn.Release()
+
+*/
 
 // Create godoc
 //
@@ -30,7 +48,8 @@ import (
 //  @failure        422 {object}    errors.Error
 //  @failure        500 {object}    errors.Error
 //  @router         /Product [post]
-func CreateProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func CreateProduct(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
+
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         //getting data
@@ -71,7 +90,7 @@ func CreateProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 //  @success        200 {array}     repositories.Product
 //  @failure        500 {object}    errors.Error
 //  @router         /Product [get]
-func ReadProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func ReadProduct(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         ps, err := repo.ReadProduct(ctx)
@@ -104,7 +123,7 @@ func ReadProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 //  @failure        404
 //  @failure        500 {object}    errors.Error
 //  @router         /Product/{id} [get]
-func ReadByProductId(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func ReadByProductId(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         const paramName = "id"
@@ -149,7 +168,7 @@ func ReadByProductId(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 //  @failure        422 {object}    errors.Error
 //  @failure        500 {object}    errors.Error
 //  @router         /Product/{id} [put]
-func UpdateProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func UpdateProduct(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         const paramName = "id"
@@ -203,7 +222,7 @@ func UpdateProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 //  @failure        404
 //  @failure        500 {object}    errors.Error
 //  @router         /Product/{id} [delete]
-func DeleteProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func DeleteProduct(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         const paramName = "id"
@@ -240,7 +259,7 @@ func DeleteProduct(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 //  @failure        404
 //  @failure        500 {object}    errors.Error
 //  @router         /product/search     [get]
-func ReadByProductName(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func ReadByProductName(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         const paramName = "name"

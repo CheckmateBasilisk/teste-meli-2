@@ -11,7 +11,7 @@ import (
 
     "github.com/google/uuid"
 	"github.com/go-chi/chi/v5"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 
 	"api-meli/api/resource/repositories"
 	"api-meli/api/common/errors"
@@ -30,7 +30,7 @@ import (
 //  @failure        422 {object}    errors.Error
 //  @failure        500 {object}    errors.Error
 //  @router         /Cart [post]
-func CreateCart(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func CreateCart(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         //getting data
@@ -71,7 +71,7 @@ func CreateCart(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 //  @success        200 {array}     repositories.Cart
 //  @failure        500 {object}    errors.Error
 //  @router         /Cart [get]
-func ReadCart(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func ReadCart(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         cs, err := repo.ReadCart(ctx)
@@ -104,7 +104,7 @@ func ReadCart(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 //  @failure        404
 //  @failure        500 {object}    errors.Error
 //  @router         /Cart/{id} [get]
-func ReadByCartId(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func ReadByCartId(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         const paramName = "id"
@@ -149,7 +149,7 @@ func ReadByCartId(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 //  @failure        422 {object}    errors.Error
 //  @failure        500 {object}    errors.Error
 //  @router         /Cart/{id} [put]
-func UpdateCart(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func UpdateCart(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         const paramName = "id"
@@ -203,7 +203,7 @@ func UpdateCart(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
 //  @failure        404
 //  @failure        500 {object}    errors.Error
 //  @router         /Cart/{id} [delete]
-func DeleteCart(ctx context.Context, conn *pgx.Conn) http.HandlerFunc {
+func DeleteCart(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     repo := repositories.New(conn)
     return func (w http.ResponseWriter, r *http.Request) {
         const paramName = "id"

@@ -7,13 +7,13 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/jackc/pgx/v5"
+    "github.com/jackc/pgx/v5/pgxpool"
 
 	"api-meli/api/resource/handlers"
 )
 
 
-func NewRouter(ctx context.Context, conn *pgx.Conn) *chi.Mux {
+func NewRouter(ctx context.Context, dbPool *pgxpool.Pool) *chi.Mux {
     router := chi.NewRouter()
     router.Use(middleware.Logger)
     router.Use(common)
@@ -34,33 +34,33 @@ func NewRouter(ctx context.Context, conn *pgx.Conn) *chi.Mux {
     router.Route("/v1", func(router chi.Router) { //root route
         //routes for datatype
         router.Route("/product", func(router chi.Router) {
-            router.Get("/search", handlers.ReadByProductName(ctx, conn))
-            router.Post("/", handlers.CreateProduct(ctx, conn))
-            router.Get("/", handlers.ReadProduct(ctx, conn))
-            router.Get("/{id}", handlers.ReadByProductId(ctx, conn))
-            router.Put("/{id}", handlers.UpdateProduct(ctx, conn))
-            router.Delete("/{id}", handlers.DeleteProduct(ctx, conn))
+            router.Get("/search", handlers.ReadByProductName(ctx, dbPool))
+            router.Post("/", handlers.CreateProduct(ctx, dbPool))
+            router.Get("/", handlers.ReadProduct(ctx, dbPool))
+            router.Get("/{id}", handlers.ReadByProductId(ctx, dbPool))
+            router.Put("/{id}", handlers.UpdateProduct(ctx, dbPool))
+            router.Delete("/{id}", handlers.DeleteProduct(ctx, dbPool))
         })
         router.Route("/customer", func(router chi.Router) {
-            router.Post("/", handlers.CreateCustomer(ctx, conn))
-            router.Get("/", handlers.ReadCustomer(ctx, conn))
-            router.Get("/{id}", handlers.ReadByCustomerId(ctx, conn))
-            router.Put("/{id}", handlers.UpdateCustomer(ctx, conn))
-            router.Delete("/{id}", handlers.DeleteCustomer(ctx, conn))
+            router.Post("/", handlers.CreateCustomer(ctx, dbPool))
+            router.Get("/", handlers.ReadCustomer(ctx, dbPool))
+            router.Get("/{id}", handlers.ReadByCustomerId(ctx, dbPool))
+            router.Put("/{id}", handlers.UpdateCustomer(ctx, dbPool))
+            router.Delete("/{id}", handlers.DeleteCustomer(ctx, dbPool))
         })
         router.Route("/cart", func(router chi.Router) {
-            router.Post("/", handlers.CreateCart(ctx, conn))
-            router.Get("/", handlers.ReadCart(ctx, conn))
-            router.Get("/{id}", handlers.ReadByCartId(ctx, conn))
-            router.Put("/{id}", handlers.UpdateCart(ctx, conn))
-            router.Delete("/{id}", handlers.DeleteCart(ctx, conn))
+            router.Post("/", handlers.CreateCart(ctx, dbPool))
+            router.Get("/", handlers.ReadCart(ctx, dbPool))
+            router.Get("/{id}", handlers.ReadByCartId(ctx, dbPool))
+            router.Put("/{id}", handlers.UpdateCart(ctx, dbPool))
+            router.Delete("/{id}", handlers.DeleteCart(ctx, dbPool))
         })
         router.Route("/purchase", func(router chi.Router) {
-            router.Post("/", handlers.CreatePurchase(ctx, conn))
-            router.Get("/", handlers.ReadPurchase(ctx, conn))
-            router.Get("/{id}", handlers.ReadByPurchaseId(ctx, conn))
-            router.Put("/{id}", handlers.UpdatePurchase(ctx, conn))
-            router.Delete("/{id}", handlers.DeletePurchase(ctx, conn))
+            router.Post("/", handlers.CreatePurchase(ctx, dbPool))
+            router.Get("/", handlers.ReadPurchase(ctx, dbPool))
+            router.Get("/{id}", handlers.ReadByPurchaseId(ctx, dbPool))
+            router.Put("/{id}", handlers.UpdatePurchase(ctx, dbPool))
+            router.Delete("/{id}", handlers.DeletePurchase(ctx, dbPool))
         })
     })
 
