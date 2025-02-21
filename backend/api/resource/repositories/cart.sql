@@ -40,7 +40,10 @@ DELETE FROM cart
         id = $1
 ;
 
--- read many
--- name: ReadCartByCustomerId
+-- read many cart entries belonging to the same customer
+-- name: ReadCartByCustomerId :many
 SELECT * FROM cart
+    WHERE
+        customer_id = $1
+;
 

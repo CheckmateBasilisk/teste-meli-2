@@ -6,7 +6,6 @@ import (
     "log"
 	"net/http"
 
-    "github.com/jackc/pgx/v5"
     "github.com/jackc/pgx/v5/pgxpool"
 
     "api-meli/config"
@@ -27,12 +26,10 @@ func main() {
     // getting config values
     conf := config.GetConfig(ctx)
 
-    dbConn , dbErr := pgx.Connect(ctx, conf.Db.Url)
     dbPool, dbErr := pgxpool.New(ctx, conf.Db.Url)
     if dbErr != nil {
         log.Fatalf("Database connection failed: %v\n", dbErr)
     }
-    defer dbConn.Close(ctx) //FIXME: catch error?
 	defer dbPool.Close()
 
     // building server

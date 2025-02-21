@@ -275,9 +275,6 @@ func ReadByProductName(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc
             return
         }
 
-        fmt.Println(">>>> ", name)
-        fmt.Println(">>>> ", p)
-
         err = json.NewEncoder(w).Encode(p)
         if err != nil {
             msg, code := errors.JsonEncodeFailure()

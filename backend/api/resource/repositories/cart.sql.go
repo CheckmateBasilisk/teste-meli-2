@@ -121,6 +121,42 @@ func (q *Queries) ReadCart(ctx context.Context) ([]Cart, error) {
 	return items, nil
 }
 
+const ReadCartByCustomerId = `-- name: ReadCartByCustomerId :many
+SELECT id, product_id, customer_id, amount FROM cart
+    WHERE
+        customer_id = $1
+`
+
+// read many cart entries belonging to the same customer
+//
+//	SELECT id, product_id, customer_id, amount FROM cart
+//	    WHERE
+//	        customer_id = $1
+func (q *Queries) ReadCartByCustomerId(ctx context.Context, customerID uuid.UUID) ([]Cart, error) {
+	rows, err := q.db.Query(ctx, ReadCartByCustomerId, customerID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Cart{}
+	for rows.Next() {
+		var i Cart
+		if err := rows.Scan(
+			&i.ID,
+			&i.ProductID,
+			&i.CustomerID,
+			&i.Amount,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const UpdateCart = `-- name: UpdateCart :one
 UPDATE cart
 SET

@@ -113,7 +113,7 @@ SELECT id, barcode, name, price, stock, rating, descr, image FROM product
     ORDER BY name DESC
 `
 
-// read many
+// read many with name like
 //
 //	SELECT id, barcode, name, price, stock, rating, descr, image FROM product
 //	    WHERE LOWER(name) LIKE CONCAT('%%',$1::TEXT,'%%')

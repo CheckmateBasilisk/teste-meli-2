@@ -227,3 +227,46 @@ func DeleteCart(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
     }
 }
 
+// Read godoc
+//
+//  @summary        Read Cart by customer_id
+//  @description    Read Cart by customer_id
+//  @tags           Cart
+//  @accept         json
+//  @produce        json
+//  @param          id	path        string  true    "ID"
+//  @success        200 {object}    repositories.Cart
+//  @failure        400 {object}    errors.Error
+//  @failure        404
+//  @failure        500 {object}    errors.Error
+//  @router         /customer/{id}/cart/ [get]
+func ReadCartByCustomerId(ctx context.Context, conn *pgxpool.Pool) http.HandlerFunc {
+    repo := repositories.New(conn)
+    return func (w http.ResponseWriter, r *http.Request) {
+        const paramName = "id"
+        id := chi.URLParam(r, paramName)
+        uuid, err := uuid.Parse(id)
+        if err != nil {
+            msg, code := errors.InvalidURLParam(paramName)
+            log.Println(fmt.Errorf(msg, err))
+            http.Error(w, msg, code)
+            return
+        }
+        p, err := repo.ReadCartByCustomerId(ctx, uuid)
+        if err != nil {
+            msg, code := errors.DbReadFailure()
+            log.Println(fmt.Errorf(msg, err))
+            http.Error(w, msg, code)
+            return
+        }
+
+        err = json.NewEncoder(w).Encode(p)
+        if err != nil {
+            msg, code := errors.JsonEncodeFailure()
+            log.Println(fmt.Errorf(msg, err))
+            http.Error(w, msg, code)
+            return
+        }
+    }
+}
+

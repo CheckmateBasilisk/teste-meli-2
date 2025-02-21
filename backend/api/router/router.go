@@ -47,6 +47,7 @@ func NewRouter(ctx context.Context, dbPool *pgxpool.Pool) *chi.Mux {
             router.Get("/{id}", handlers.ReadByCustomerId(ctx, dbPool))
             router.Put("/{id}", handlers.UpdateCustomer(ctx, dbPool))
             router.Delete("/{id}", handlers.DeleteCustomer(ctx, dbPool))
+            router.Get("/{id}/cart", handlers.DeleteCustomer(ctx, dbPool))
         })
         router.Route("/cart", func(router chi.Router) {
             router.Post("/", handlers.CreateCart(ctx, dbPool))

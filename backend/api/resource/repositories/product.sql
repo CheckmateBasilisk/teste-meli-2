@@ -47,9 +47,10 @@ DELETE FROM product
 ;
 
 
--- read many
+-- read many with name like
 -- name: ReadByProductName :many
 SELECT * FROM product
     WHERE LOWER(name) LIKE CONCAT('%%',$1::TEXT,'%%')
     ORDER BY name DESC
 ;
+
